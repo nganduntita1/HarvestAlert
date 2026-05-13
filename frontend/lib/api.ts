@@ -23,10 +23,15 @@ import {
 } from './types'
 
 /**
- * Get API base URL from environment variable
- * Defaults to localhost:8000 for development
+ * Get API base URL from environment variable.
+ * Falls back to the production Fly.io URL so the deployed Netlify site
+ * works even if NEXT_PUBLIC_API_BASE_URL is not explicitly set.
  */
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? 'https://harvestalert-backend.fly.dev'
+    : 'http://localhost:8000')
 
 /**
  * Request timeout in milliseconds (5 seconds)
